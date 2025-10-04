@@ -10,31 +10,32 @@ class ImageProcessorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Image Processing Software")
-        self.root.configure(bg="lightgray")
+        self.root.configure(bg="#222")  # Dark background
 
         # Frame for control buttons
-        button_frame = tk.Frame(self.root, bg="lightgray")
+        button_frame = tk.Frame(self.root, bg="#222")
         button_frame.pack(side="left", fill="y")
 
         # Buttons for each functionality
-        tk.Button(button_frame, text="Load Image", command=self.load_image).pack(pady=5)
-        tk.Button(button_frame, text="Convert to Grayscale", command=self.convert_to_grayscale).pack(pady=5)
-        tk.Button(button_frame, text="Spatial Filters", command=self.open_filter_window).pack(pady=5)
-        tk.Button(button_frame, text="Contrast Adjustment", command=self.adjust_contrast).pack(pady=5)
-        tk.Button(button_frame, text="Morphological Operations", command=self.morphological_operations).pack(pady=5)
-        tk.Button(button_frame, text="Segmentation and Contours", command=self.segment_and_find_contours).pack(pady=5)
-        tk.Button(button_frame, text="Custom Filters", command=self.open_custom_filter_window).pack(pady=5)
-        tk.Button(button_frame, text="Display Histogram", command=self.display_histogram).pack(pady=5)
-        tk.Button(button_frame, text="Equalize Histogram", command=self.equalize_histogram).pack(pady=5)
+        button_opts = {'bg': '#333', 'fg': '#eee', 'activebackground': '#444', 'activeforeground': '#fff'}
+        tk.Button(button_frame, text="Load Image", command=self.load_image, **button_opts).pack(pady=5)
+        tk.Button(button_frame, text="Convert to Grayscale", command=self.convert_to_grayscale, **button_opts).pack(pady=5)
+        tk.Button(button_frame, text="Spatial Filters", command=self.open_filter_window, **button_opts).pack(pady=5)
+        tk.Button(button_frame, text="Contrast Adjustment", command=self.adjust_contrast, **button_opts).pack(pady=5)
+        tk.Button(button_frame, text="Morphological Operations", command=self.morphological_operations, **button_opts).pack(pady=5)
+        tk.Button(button_frame, text="Segmentation and Contours", command=self.segment_and_find_contours, **button_opts).pack(pady=5)
+        tk.Button(button_frame, text="Custom Filters", command=self.open_custom_filter_window, **button_opts).pack(pady=5)
+        tk.Button(button_frame, text="Display Histogram", command=self.display_histogram, **button_opts).pack(pady=5)
+        tk.Button(button_frame, text="Equalize Histogram", command=self.equalize_histogram, **button_opts).pack(pady=5)
 
         # Canvas for image display
-        self.original_canvas = tk.Canvas(self.root, width=400, height=400, bg="white")
+        self.original_canvas = tk.Canvas(self.root, width=400, height=400, bg="#111", highlightthickness=0)
         self.original_canvas.pack(side="left", padx=10, pady=10)
-        self.processed_canvas = tk.Canvas(self.root, width=400, height=400, bg="white")
+        self.processed_canvas = tk.Canvas(self.root, width=400, height=400, bg="#111", highlightthickness=0)
         self.processed_canvas.pack(side="left", padx=10, pady=10)
 
         # Label for image information
-        self.info_label = tk.Label(self.root, text="", bg="lightgray")
+        self.info_label = tk.Label(self.root, text="", bg="#222", fg="#eee")
         self.info_label.pack(pady=5)
 
         self.original_image = None
@@ -77,7 +78,7 @@ class ImageProcessorApp:
         if self.original_image is not None:
             window = tk.Toplevel(self.root)
             window.title("Spatial Filters")
-            window.configure(bg="lightgray")
+            window.configure(bg="#222")
 
             def apply_filter(filter_type):
                 kernel_size = int(kernel_size_slider.get())
@@ -99,22 +100,22 @@ class ImageProcessorApp:
                 self.processed_image = filtered_image
                 self.display_image(filtered_image if len(filtered_image.shape) == 3 else cv2.cvtColor(filtered_image, cv2.COLOR_GRAY2BGR), self.processed_canvas)
 
-            kernel_size_slider = tk.Scale(window, from_=3, to=15, orient=tk.HORIZONTAL, label="Kernel Size", bg="lightgray")
+            kernel_size_slider = tk.Scale(window, from_=3, to=15, orient=tk.HORIZONTAL, label="Kernel Size", bg="#222", fg="#eee", troughcolor="#333", highlightthickness=0)
             kernel_size_slider.set(3)
             kernel_size_slider.pack(pady=5)
 
-            tk.Button(window, text="Mean Filter", command=lambda: apply_filter('mean')).pack(pady=5)
-            tk.Button(window, text="Gaussian Filter", command=lambda: apply_filter('gaussian')).pack(pady=5)
-            tk.Button(window, text="Median Filter", command=lambda: apply_filter('median')).pack(pady=5)
-            tk.Button(window, text="Laplacian Filter", command=lambda: apply_filter('laplacian')).pack(pady=5)
-            tk.Button(window, text="Sobel Filter", command=lambda: apply_filter('sobel')).pack(pady=5)
+            tk.Button(window, text="Mean Filter", command=lambda: apply_filter('mean'), bg="#333", fg="#eee", activebackground="#444", activeforeground="#fff").pack(pady=5)
+            tk.Button(window, text="Gaussian Filter", command=lambda: apply_filter('gaussian'), bg="#333", fg="#eee", activebackground="#444", activeforeground="#fff").pack(pady=5)
+            tk.Button(window, text="Median Filter", command=lambda: apply_filter('median'), bg="#333", fg="#eee", activebackground="#444", activeforeground="#fff").pack(pady=5)
+            tk.Button(window, text="Laplacian Filter", command=lambda: apply_filter('laplacian'), bg="#333", fg="#eee", activebackground="#444", activeforeground="#fff").pack(pady=5)
+            tk.Button(window, text="Sobel Filter", command=lambda: apply_filter('sobel'), bg="#333", fg="#eee", activebackground="#444", activeforeground="#fff").pack(pady=5)
 
     def adjust_contrast(self):
         """Adjust brightness and contrast using sliders."""
         if self.original_image is not None:
             window = tk.Toplevel(self.root)
             window.title("Brightness/Contrast Adjustment")
-            window.configure(bg="lightgray")
+            window.configure(bg="#222")
 
             def update(val):
                 alpha = contrast_slider.get() / 100
@@ -122,11 +123,11 @@ class ImageProcessorApp:
                 adjusted_image = cv2.convertScaleAbs(self.original_image, alpha=alpha, beta=beta)
                 self.display_image(adjusted_image, self.processed_canvas)
 
-            contrast_slider = tk.Scale(window, from_=0, to=100, orient=tk.HORIZONTAL, label="Contrast", command=update, bg="lightgray")
+            contrast_slider = tk.Scale(window, from_=0, to=100, orient=tk.HORIZONTAL, label="Contrast", command=update, bg="#222", fg="#eee", troughcolor="#333", highlightthickness=0)
             contrast_slider.set(50)
             contrast_slider.pack(pady=5)
 
-            brightness_slider = tk.Scale(window, from_=0, to=100, orient=tk.HORIZONTAL, label="Brightness", command=update, bg="lightgray")
+            brightness_slider = tk.Scale(window, from_=0, to=100, orient=tk.HORIZONTAL, label="Brightness", command=update, bg="#222", fg="#eee", troughcolor="#333", highlightthickness=0)
             brightness_slider.set(50)
             brightness_slider.pack(pady=5)
 
@@ -159,28 +160,28 @@ class ImageProcessorApp:
         if self.original_image is not None:
             window = tk.Toplevel(self.root)
             window.title("Morphological Operations")
-            window.configure(bg="lightgray")
+            window.configure(bg="#222")
 
             def apply(operation):
                 kernel_size = int(kernel_size_slider.get())
                 self.apply_morphological_operation(operation, kernel_size)
 
-            kernel_size_slider = tk.Scale(window, from_=3, to=15, orient=tk.HORIZONTAL, label="Kernel Size", bg="lightgray")
+            kernel_size_slider = tk.Scale(window, from_=3, to=15, orient=tk.HORIZONTAL, label="Kernel Size", bg="#222", fg="#eee", troughcolor="#333", highlightthickness=0)
             kernel_size_slider.set(3)
             kernel_size_slider.pack(pady=5)
 
-            tk.Button(window, text="Erosion", command=lambda: apply('erosion')).pack(pady=5)
-            tk.Button(window, text="Dilation", command=lambda: apply('dilation')).pack(pady=5)
-            tk.Button(window, text="Opening", command=lambda: apply('opening')).pack(pady=5)
-            tk.Button(window, text="Closing", command=lambda: apply('closing')).pack(pady=5)
-            tk.Button(window, text="Gradient", command=lambda: apply('gradient')).pack(pady=5)
+            tk.Button(window, text="Erosion", command=lambda: apply('erosion'), bg="#333", fg="#eee", activebackground="#444", activeforeground="#fff").pack(pady=5)
+            tk.Button(window, text="Dilation", command=lambda: apply('dilation'), bg="#333", fg="#eee", activebackground="#444", activeforeground="#fff").pack(pady=5)
+            tk.Button(window, text="Opening", command=lambda: apply('opening'), bg="#333", fg="#eee", activebackground="#444", activeforeground="#fff").pack(pady=5)
+            tk.Button(window, text="Closing", command=lambda: apply('closing'), bg="#333", fg="#eee", activebackground="#444", activeforeground="#fff").pack(pady=5)
+            tk.Button(window, text="Gradient", command=lambda: apply('gradient'), bg="#333", fg="#eee", activebackground="#444", activeforeground="#fff").pack(pady=5)
 
     def segment_and_find_contours(self):
         """Segment the image and find contours."""
         if self.original_image is not None:
             window = tk.Toplevel(self.root)
             window.title("Segmentation and Contours")
-            window.configure(bg="lightgray")
+            window.configure(bg="#222")
 
             def apply_segmentation():
                 threshold_value = threshold_slider.get()
@@ -191,18 +192,18 @@ class ImageProcessorApp:
                 cv2.drawContours(contour_image, contours, -1, (0, 255, 0), 2)
                 self.display_image(contour_image, self.processed_canvas)
 
-            threshold_slider = tk.Scale(window, from_=0, to=255, orient=tk.HORIZONTAL, label="Threshold", bg="lightgray")
+            threshold_slider = tk.Scale(window, from_=0, to=255, orient=tk.HORIZONTAL, label="Threshold", bg="#222", fg="#eee", troughcolor="#333", highlightthickness=0)
             threshold_slider.set(128)
             threshold_slider.pack(pady=5)
 
-            tk.Button(window, text="Apply", command=apply_segmentation).pack(pady=5)
+            tk.Button(window, text="Apply", command=apply_segmentation, bg="#333", fg="#eee", activebackground="#444", activeforeground="#fff").pack(pady=5)
 
     def open_custom_filter_window(self):
         """Open a new window to apply a custom filter."""
         if self.original_image is not None:
             window = tk.Toplevel(self.root)
             window.title("Custom Filter")
-            window.configure(bg="lightgray")
+            window.configure(bg="#222")
 
             def apply_filter():
                 kernel = np.array([
@@ -217,7 +218,7 @@ class ImageProcessorApp:
             for i in range(3):
                 row = []
                 for j in range(3):
-                    entry = tk.Entry(window, width=5)
+                    entry = tk.Entry(window, width=5, bg="#333", fg="#eee", insertbackground="#eee")
                     entry.grid(row=i, column=j, padx=5, pady=5)
                     row.append(entry)
                 entries.append(row)
@@ -226,7 +227,7 @@ class ImageProcessorApp:
             entry_10, entry_11, entry_12 = entries[1]
             entry_20, entry_21, entry_22 = entries[2]
 
-            tk.Button(window, text="Apply Filter", command=apply_filter).grid(row=3, columnspan=3, pady=10)
+            tk.Button(window, text="Apply Filter", command=apply_filter, bg="#333", fg="#eee", activebackground="#444", activeforeground="#fff").grid(row=3, columnspan=3, pady=10)
 
     def display_histogram(self):
         """Display the histogram of the image."""
